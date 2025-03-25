@@ -28,4 +28,22 @@ defmodule Remcal.AccountsFixtures do
     [_, token | _] = String.split(captured_email.text_body, "[TOKEN]")
     token
   end
+
+  @doc """
+  Generate a event.
+  """
+  def event_fixture(attrs \\ %{}) do
+    {:ok, event} =
+      attrs
+      |> Enum.into(%{
+        date: ~D[2025-03-30],
+        description: "some description",
+        done: true,
+        reminder_start_date: ~D[2025-03-30],
+        title: "some title"
+      })
+      |> Remcal.Accounts.create_event()
+
+    event
+  end
 end

@@ -505,4 +505,73 @@ defmodule Remcal.AccountsTest do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "events" do
+    alias Remcal.Accounts.Event
+
+    import Remcal.AccountsFixtures
+
+    @invalid_attrs %{date: nil, done: nil, description: nil, title: nil, reminder_start_date: nil}
+
+    test "list_events/0 returns all events" do
+      user = user_fixture()
+      event = event_fixture(%{user_id: user.id})
+      assert Accounts.list_events() == [event]
+    end
+
+    test "get_event!/1 returns the event with given id" do
+      user = user_fixture()
+      event = event_fixture(%{user_id: user.id})
+      assert Accounts.get_event!(event.id) == event
+    end
+
+    test "create_event/1 with valid data creates a event" do
+      user = user_fixture()
+      valid_attrs = %{user_id: user.id, date: ~D[2025-03-30], done: true, description: "some description", title: "some title", reminder_start_date: ~D[2025-03-30]}
+
+      assert {:ok, %Event{} = event} = Accounts.create_event(valid_attrs)
+      assert event.date == ~D[2025-03-30]
+      assert event.done == true
+      assert event.description == "some description"
+      assert event.title == "some title"
+      assert event.reminder_start_date == ~D[2025-03-30]
+    end
+
+    test "create_event/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_event(@invalid_attrs)
+    end
+
+    test "update_event/2 with valid data updates the event" do
+      user = user_fixture()
+      event = event_fixture(%{user_id: user.id})
+      update_attrs = %{date: ~D[2025-03-31], done: false, description: "some updated description", title: "some updated title", reminder_start_date: ~D[2025-03-31]}
+
+      assert {:ok, %Event{} = event} = Accounts.update_event(event, update_attrs)
+      assert event.date == ~D[2025-03-31]
+      assert event.done == false
+      assert event.description == "some updated description"
+      assert event.title == "some updated title"
+      assert event.reminder_start_date == ~D[2025-03-31]
+    end
+
+    test "update_event/2 with invalid data returns error changeset" do
+      user = user_fixture()
+      event = event_fixture(%{user_id: user.id})
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_event(event, @invalid_attrs)
+      assert event == Accounts.get_event!(event.id)
+    end
+
+    test "delete_event/1 deletes the event" do
+      user = user_fixture()
+      event = event_fixture(%{user_id: user.id})
+      assert {:ok, %Event{}} = Accounts.delete_event(event)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_event!(event.id) end
+    end
+
+    test "change_event/1 returns a event changeset" do
+      user = user_fixture()
+      event = event_fixture(%{user_id: user.id})
+      assert %Ecto.Changeset{} = Accounts.change_event(event)
+    end
+  end
 end
