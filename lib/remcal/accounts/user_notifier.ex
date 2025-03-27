@@ -8,7 +8,7 @@ defmodule Remcal.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"Remcal", "contact@example.com"})
+      |> from({"Remcal", "remcal@marpo60.xyz"})
       |> subject(subject)
       |> text_body(body)
 
