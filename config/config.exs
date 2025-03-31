@@ -31,6 +31,20 @@ config :remcal, RemcalWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :remcal, Remcal.Mailer, adapter: Swoosh.Adapters.Local
 
+# Oban
+config :remcal, Oban,
+  engine: Oban.Engines.Lite,
+  queues: [default: 10],
+  repo: Remcal.Repo,
+  plugins: [
+    {Oban.Plugins.Cron,
+     crontab: [
+       # Daily Reminder worker
+       # {"0 8 * * *", Remcal.Workers.ReminderWorker},
+       {"* * * * *", Remcal.Workers.ReminderWorker},
+     ]}
+  ]
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",

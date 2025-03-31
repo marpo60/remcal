@@ -15,6 +15,7 @@ defmodule Remcal.Application do
         skip: skip_migrations?()},
       {DNSCluster, query: Application.get_env(:remcal, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Remcal.PubSub},
+      {Oban, Application.fetch_env!(:remcal, Oban)},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Remcal.Finch},
       # Start a worker by calling: Remcal.Worker.start_link(arg)
