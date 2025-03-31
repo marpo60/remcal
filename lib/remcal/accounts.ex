@@ -454,4 +454,13 @@ defmodule Remcal.Accounts do
   def change_event(%Event{} = event, attrs \\ %{}) do
     Event.changeset(event, attrs)
   end
+
+  def list_user_with_events_for_reminders(date) do
+    Event
+    |> where([e], e.done == false)
+    |> where([e], e.reminder_start_date < ^date)
+    |> preload(:user)
+    |> Repo.all
+    |> Enum.group_by(fn(e) -> e.user end)
+  end
 end

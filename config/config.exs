@@ -40,8 +40,7 @@ config :remcal, Oban,
     {Oban.Plugins.Cron,
      crontab: [
        # Daily Reminder worker
-       # {"0 8 * * *", Remcal.Workers.ReminderWorker},
-       {"* * * * *", Remcal.Workers.ReminderWorker},
+       {"0 8 * * *", Remcal.Workers.ReminderWorker}
      ]}
   ]
 

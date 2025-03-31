@@ -2,12 +2,16 @@ defmodule Remcal.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Remcal.Accounts.Event
+
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
+
+    has_many :events, Event
 
     timestamps(type: :utc_datetime)
   end
