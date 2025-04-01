@@ -26,6 +26,11 @@ config :remcal,
     password: System.get_env("BASIC_AUTH_PASSWORD", "secret")
   ]
 
+config :tower_slack,
+  otp_app: :remcal,
+  webhook_url: System.get_env("TOWER_SLACK_WEBHOOK_URL"),
+  environment: System.get_env("DEPLOYMENT_ENV", to_string(config_env()))
+
 if config_env() == :prod do
   database_path =
     System.get_env("DATABASE_PATH") ||

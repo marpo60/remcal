@@ -44,6 +44,8 @@ config :remcal, Oban,
      ]}
   ]
 
+config :tower, :reporters, [Tower.EphemeralReporter]
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",
