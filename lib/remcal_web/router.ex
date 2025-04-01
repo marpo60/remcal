@@ -2,6 +2,7 @@ defmodule RemcalWeb.Router do
   use RemcalWeb, :router
 
   import RemcalWeb.UserAuth
+  import Oban.Web.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -90,5 +91,15 @@ defmodule RemcalWeb.Router do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
+  end
+
+  scope "/admin/", RemcalWeb do
+    pipe_through [:browser, :admin_basic_auth]
+
+    oban_dashboard "/oban"
+  end
+
+  defp admin_basic_auth(conn, _opts) do
+    Plug.BasicAuth.basic_auth(conn, Application.fetch_env!(:remcal, :basic_auth))
   end
 end

@@ -20,6 +20,12 @@ if System.get_env("PHX_SERVER") do
   config :remcal, RemcalWeb.Endpoint, server: true
 end
 
+config :remcal,
+  basic_auth: [
+    username: System.get_env("BASIC_AUTH_USERNAME", "admin"),
+    password: System.get_env("BASIC_AUTH_PASSWORD", "secret")
+  ]
+
 if config_env() == :prod do
   database_path =
     System.get_env("DATABASE_PATH") ||
